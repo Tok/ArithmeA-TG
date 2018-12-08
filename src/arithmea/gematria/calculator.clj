@@ -2,7 +2,8 @@
   (:require [arithmea.util :as util]
             [arithmea.gematria.transliterator :as trans]
             [arithmea.gematria.alphabet.latin :as latin]
-            [arithmea.gematria.alphabet.hebrew :as hebrew]))
+            [arithmea.gematria.alphabet.hebrew :as hebrew]
+            [clojure.set :as set]))
 
 (defn find-matches [dict method number] (get (get dict method) number))
 
@@ -17,4 +18,4 @@
 (def active-methods [:ia :chal :pyth :naeq :tq :eq])
 
 (def method-names {:ia "Simple" :chal "Chal" :pyth "Pyth" :naeq "NAEQ" :tq "TQ" :eq "EQ26" :ger "German"})
-(defn find-method [name] (get (clojure.set/map-invert method-names) name))
+(defn find-method [name] (get (set/map-invert method-names) name))

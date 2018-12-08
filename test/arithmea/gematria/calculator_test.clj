@@ -1,7 +1,5 @@
-(ns arithmea.core-test
-  (:require [clojure.tools.logging :as log]
-            [clojure.test :refer :all]
-            [arithmea.core :refer :all]
+(ns arithmea.gematria.calculator-test
+  (:require [clojure.test :refer :all]
             [arithmea.gematria.calculator :as calc]))
 
 (defn- calc [method s] (calc/calculate method s))
