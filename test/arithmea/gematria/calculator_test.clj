@@ -54,3 +54,15 @@
     (testing (let [s "ABRAXAS"] s (test-calc 638 method s)))
     (testing (let [s "BABALON"] s (test-calc 461 method s)))
     ))
+
+(deftest full
+  (testing (let [s "DERSCHLUESSEL"] s (test-calc 577 :full s)))
+  )
+
+(deftest ordinal
+  (testing (let [s "DERSCHLUESSEL"] s (test-calc 82 :ordinal s)))
+  )
+
+(deftest katan
+  (testing (let [s "DERSCHLUESSEL"] s (test-calc 28 :katan s)))
+  )
