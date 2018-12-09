@@ -86,13 +86,13 @@
   (testing (let [s "AK"] s (is [:KAPH_FINAL] (trans/lat-to-heb-vec s))))
   )
 
-(deftest final-kaph
+(deftest final-mem
   (testing (let [s "MA"] s (is [:MEM] (trans/lat-to-heb-vec s))))
   (testing (let [s "AM"] s (is [:MEM_FINAL] (trans/lat-to-heb-vec s))))
   (testing (let [s "AMA"] s (is [:MEM_FINAL] (trans/lat-to-heb-vec s))))
   )
 
-(deftest final-kaph
+(deftest final-nun
   (testing (let [s "NA"] s (is [:NUN] (trans/lat-to-heb-vec s))))
   (testing (let [s "AN"] s (is [:NUN_FINAL] (trans/lat-to-heb-vec s))))
   (testing (let [s "ANA"] s (is [:NUN_FINAL] (trans/lat-to-heb-vec s))))

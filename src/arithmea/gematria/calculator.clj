@@ -5,10 +5,6 @@
             [arithmea.util :as util]
             [clojure.set :as set]))
 
-;test should be same as ia
-;(defn- lat-ordinal-value [c] (- (int (char c)) 64))
-;(defn- lat-ordinal [s] (reduce + 0 (map lat-ordinal-value (util/clean-up s))))
-
 (defn latin-reduce [method s] (reduce + 0 (map #(latin/number-value method %) (util/clean-up s))))
 (defn hebrew-reduce [method vec] (reduce + 0 (map #(hebrew/number-value method %) vec)))
 (defn calculate [method s]
@@ -25,3 +21,5 @@
                    :ordinal "Ordinal" :full "Full" :katan "Katan"})
 
 (defn find-method [name] (get (set/map-invert method-names) name))
+
+(defn lat-ordinal-value [c] (- (int (char c)) 64))

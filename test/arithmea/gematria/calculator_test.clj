@@ -1,6 +1,7 @@
 (ns arithmea.gematria.calculator-test
   (:require [arithmea.gematria.calculator :as calc]
-            [clojure.test :refer :all]))
+            [clojure.test :refer :all]
+            [clojure.tools.logging :as log]))
 
 (defn- calc [method s] (calc/calculate method s))
 (defn- test-calc [expected method s] (is (= expected (calc method s))))
@@ -25,6 +26,12 @@
     (testing (let [s "ARITHMEA"] s (test-calc 75 method s)))
     (testing (let [s "DER-SCHLUESSEL"] s (test-calc 150 method s)))
     ))
+
+(defn- test-lat-ordinal [i]
+  (let [expected (calc/lat-ordinal-value i)
+        actual (calc :ia (str (char i)))]
+    (testing (is (= expected actual)))))
+(deftest simple-ordinal (doseq [i (range 65 90)] (test-lat-ordinal i)))
 
 (deftest naeq
   (let [method :naeq]
@@ -66,3 +73,4 @@
 (deftest katan
   (testing (let [s "DERSCHLUESSEL"] s (test-calc 28 :katan s)))
   )
+
