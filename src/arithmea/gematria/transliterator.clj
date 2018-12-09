@@ -1,9 +1,6 @@
 (ns arithmea.gematria.transliterator
-  (:require [clojure.string :as str]
-            [arithmea.gematria.alphabet.hebrew :as hebrew]))
-
-(defn final-or-first [letter next]
-  (case next nil :final :else letter))
+  (:require [arithmea.gematria.alphabet.hebrew :as hebrew]
+            [clojure.string :as str]))
 
 (defn- is-first? [last] (or (= nil last) (= \- last)))
 (defn- is-last? [next] (or (= nil next) (= \- next)))
@@ -101,7 +98,6 @@
           result (hebrew-letter last current next after-next)
           translit (get result 0)
           drop-count (get result 1)]
-      ;(println translit " -- " drop-count)
       (recur (vec (rest (drop drop-count parts))) (conj accu translit)))))
 
 (defn lat-to-heb-vec [lat]

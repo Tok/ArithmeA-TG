@@ -1,6 +1,6 @@
 (ns arithmea.gematria.transliterator-test
-  (:require [clojure.test :refer :all]
-            [arithmea.gematria.transliterator :as trans]))
+  (:require [arithmea.gematria.transliterator :as trans]
+            [clojure.test :refer :all]))
 
 (deftest basic
   (testing (let [s "AAA"] s (is (= [:ALEPH :ALEPH :ALEPH] (trans/lat-to-heb-vec s)))))

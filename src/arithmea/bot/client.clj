@@ -1,11 +1,11 @@
 (ns arithmea.bot.client
-  (:require [clj-http.client :as client]
-            [arithmea.bot.command :as command]
-            [clojure.tools.logging :as log]
-            [clojure.string :as str]
-            [clojure.data.json :as json]
+  (:require [arithmea.bot.command :as command]
             [arithmea.gematria.calculator :as gem]
-            [clojure.java.io :as io]))
+            [clj-http.client :as client]
+            [clojure.data.json :as json]
+            [clojure.java.io :as io]
+            [clojure.tools.logging :as log]
+            [clojure.string :as str]))
 
 (def secret-token (slurp (io/resource "secret-token.txt")))
 
@@ -39,34 +39,34 @@
 (defn- direct-command? [text] (and (str/starts-with? text "/arithmea") (str/includes? text " ")))
 (defn- command? [text] (and (not (str/blank? text)) (or (ref-command? text) (direct-command? text))))
 
-(defn- handle-ref [dict chat-id text]
+(defn- handle-ref [chat-id text]
   (let [raw (str/replace text #"/" "")
         command (str/replace raw #"@ArithmeA_bot" "")]
     (if (str/includes? command "_")
       (let [pair (str/split command #"_" 2)
             method (gem/find-method (get pair 0))
             value (read-string (get pair 1))
-            result (command/show-value dict method value)]
+            result (command/show-value method value)]
         (send-channel-message chat-id result))
-      (let [result (command/multi-method dict command)]
+      (let [result (command/multi-method command)]
         (send-channel-message chat-id result))
       )))
 
-(defn- handle-direct [dict chat-id text]
+(defn- handle-direct [chat-id text]
   (let [command-line (str/split text #" ")
         command (get command-line 1)
         input (get command-line 2)
-        result (command/exec dict command input)]
+        result (command/exec command input)]
     (send-channel-message chat-id result)))
 
-(defn- handle-command [dict chat-id from-user text]
+(defn- handle-command [chat-id from-user text]
   (log/debug (str "@" chat-id " " from-user ": " text))
   (if (command? text)
     (cond
-      (direct-command? text) (handle-direct dict chat-id text)
-      (ref-command? text) (handle-ref dict chat-id text))))
+      (direct-command? text) (handle-direct chat-id text)
+      (ref-command? text) (handle-ref chat-id text))))
 
-(defn- handle-messages [dict chat-id messages last-update-id]
+(defn- handle-messages [chat-id messages last-update-id]
   (log/debug "handle-messages: " last-update-id)
   (if (not (empty? messages))
     (let [msg (first (seq messages))
@@ -75,21 +75,21 @@
           from-user (get (get message "from") "username")
           text (get message "text")]
       (println (str "@" chat-id " " from-user ": " text))
-      (handle-command dict chat-id from-user text)
-      (recur dict chat-id (rest messages) update-id))
+      (handle-command chat-id from-user text)
+      (recur chat-id (rest messages) update-id))
     last-update-id
     ))
 
-(defn- handle-chats [dict chat-ids messages offset]
-  (apply int (map max (map #(handle-messages dict % messages offset) chat-ids))))
+(defn- handle-chats [chat-ids messages offset]
+  (apply int (map max (map #(handle-messages % messages offset) chat-ids))))
 
-(defn update-state [dict chat-ids offset]
+(defn update-state [chat-ids offset]
   (let [posts (get-updates offset "channel_post")
         status-code (posts :status)
         body (json/read-str (posts :body))
         ok? (get body "ok")
         messages (get body "result")]
     (if (and (= status-code 200) ok?)
-      (+ (handle-chats dict chat-ids messages offset) 1)
+      (+ (handle-chats chat-ids messages offset) 1)
       (do (log/error "HTTP-Status:" status-code) offset)
       )))

@@ -1,6 +1,6 @@
 (ns arithmea.gematria.calculator-test
-  (:require [clojure.test :refer :all]
-            [arithmea.gematria.calculator :as calc]))
+  (:require [arithmea.gematria.calculator :as calc]
+            [clojure.test :refer :all]))
 
 (defn- calc [method s] (calc/calculate method s))
 (defn- test-calc [expected method s] (is (= expected (calc method s))))
