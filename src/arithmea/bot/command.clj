@@ -1,6 +1,6 @@
 (ns arithmea.bot.command
   (:require [arithmea.gematria.calculator :as gem]
-            [arithmea.gematria.matcher :as mat]
+            [arithmea.gematria.matcher :as matcher]
             [arithmea.gematria.transliterator :as trans]
             [arithmea.bot.md :as md]
             [arithmea.config :as config]
@@ -10,17 +10,23 @@
 
 (defn- single-output [word method]
   (let [value (gem/calculate method word)
-        matches (mat/find-matches method value)
+        matches (matcher/find-matches method value)
         match-count (str "[" (count matches) "]")
         method-name (get gem/method-names method)
         self-ref (str "/" method-name "\\_" value)]
     (str method-name ": " (md/bold value) " " (md/ref-link match-count self-ref) \newline)
     ))
 
+(defn display-anagrams [word]
+  (let [anagrams (matcher/find-anagrams word)]
+    (if (not (empty? anagrams))
+      (str "Anagrams: " (md/italic anagrams) \newline) "")))
+
 (defn multi-method [word]
   (let [clean-word (util/clean-up word)
         hebrew (trans/lat-to-heb clean-word)]
     (str "Input: " (md/bold clean-word) \newline
+         (display-anagrams word)
          (apply str (map #(single-output clean-word %) config/active-latin-methods))
          "Transliteration: " (md/bold hebrew) \newline
          (apply str (map #(single-output clean-word %) config/active-hebrew-methods))
@@ -36,7 +42,7 @@
       "No Matches Found.")))
 
 (defn show-value [method value]
-  (let [matches (mat/find-matches method value)
+  (let [matches (matcher/find-matches method value)
         method-name (get gem/method-names method)]
     (str "Method: " (md/bold method-name) " Value: " (md/bold value) \newline
          (display-matches matches))))
@@ -44,9 +50,11 @@
 (defn- make-output [word method]
   (let [clean-word (util/clean-up word)
         value (gem/calculate method clean-word)
-        matches (mat/find-matches method value)
-        method-name (get gem/method-names method)]
+        matches (matcher/find-matches method value)
+        method-name (get gem/method-names method)
+        anagrams (matcher/find-anagrams word)]
     (str "Input: " (md/bold clean-word) " Method: " (md/bold method-name) " Value: " (md/bold value) \newline
+         (display-anagrams word)
          (md/fixed (apply str (map #(str % "(" (gem/calculate method (str %)) ") ") (seq clean-word)))) \newline
          (display-matches matches))))
 

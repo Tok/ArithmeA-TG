@@ -2,6 +2,11 @@
   (:require [arithmea.gematria.matcher :refer :all]
             [clojure.test :refer :all]))
 
+(deftest anagram-not-self
+  (testing (let [a "CAT" b "CAT"] (str a "is" b) (is (not (anagram? a b)))))
+  (testing (let [a "ACT" b "ACT"] (str a "is" b) (is (not (anagram? a b)))))
+  )
+
 (deftest check-simple-anagrams
   (testing (let [a "Cat" b "Act"] (str a "is" b) (is (anagram? a b))))
   (testing (let [a "Act" b "Cat"] (str a "is" b) (is (anagram? a b))))
