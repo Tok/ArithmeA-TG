@@ -5,7 +5,8 @@
     [clojure.java.io :as io]
     [arithmea.bot.client :as bot]
     [arithmea.util :as util]
-    [arithmea.gematria.calculator :as gem]))
+    [arithmea.gematria.calculator :as gem]
+    [arithmea.config :as config]))
 
 (defn- slurp-words [res]
   (let [content (-> (io/resource res) slurp str/split-lines)
@@ -20,7 +21,7 @@
         dict-data (concat common-words arithmea-list)
         clean-data (sort (distinct (filter util/word? (map str/upper-case dict-data))))]
     (log/info "Loading dict with" (count clean-data) "words.")
-    (into (sorted-map) (map #(make-groups % clean-data) gem/active-methods))
+    (into (sorted-map) (map #(make-groups % clean-data) config/active-methods))
     ))
 
 (defn- main-loop [dict offset]
@@ -32,5 +33,5 @@
   (let [dict (create-dict)]
     (log/debug dict)
     (log/debug (reduce + (map #(count %) (vals (:chal dict)))) "Words.")
-    (log/info (count gem/active-methods) "active Methods.")
+    (log/info (count config/active-methods) "active Methods.")
     (main-loop dict 0)))

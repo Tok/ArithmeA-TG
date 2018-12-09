@@ -3,7 +3,8 @@
             [arithmea.bot.md :as md]
             [arithmea.util :as util]
             [arithmea.config :as config]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [arithmea.gematria.transliterator :as trans]))
 
 (defn- single-output [dict word method]
   (let [value (gem/calculate method word)
@@ -15,9 +16,10 @@
     ))
 
 (defn multi-method [dict word]
-  (let [clean-word (util/clean-up word)]
-    (str "Input: " (md/bold clean-word) \newline
-         (apply str (map #(single-output dict clean-word %) gem/active-methods))
+  (let [clean-word (util/clean-up word)
+        hebrew (trans/lat-to-heb clean-word)]
+    (str "Input: " (md/bold clean-word) " Transliteration: " (md/bold hebrew) \newline
+         (apply str (map #(single-output dict clean-word %) config/active-methods))
          )))
 
 (defn- display-matches [matches]
@@ -31,7 +33,6 @@
 
 (defn show-value [dict method value]
   (let [matches (gem/find-matches dict method value)
-        total-match-count (str "[" (count matches) "]")
         method-name (get gem/method-names method)]
     (str "Method: " (md/bold method-name) " Value: " (md/bold value) \newline
          (display-matches matches))))
@@ -57,10 +58,13 @@
             (= "status" comm) (output-status dict)
             (some #{comm} '("chal" "chaldean")) (make-output dict input :chal)
             (some #{comm} '("pyth" "pythagorean")) (make-output dict input :pyth)
-            (some #{comm} '("ia" "simple")) (make-output dict input :ia)
+            (some #{comm} '("simple" "ia")) (make-output dict input :ia)
             (some #{comm} '("naeq")) (make-output dict input :naeq)
             (some #{comm} '("tq" "trigrammaton")) (make-output dict input :tq)
             (some #{comm} '("schluessel")) (make-output dict input :ger)
-            (some #{comm} '("english" "azure" "eq26")) (make-output dict input :eq)
+            (some #{comm} '("english" "azure" "eq" "eq26")) (make-output dict input :eq)
+            (some #{comm} '("full" "hebrew")) (make-output dict input :full)
+            (some #{comm} '("ordinal")) (make-output dict input :ordinal)
+            (some #{comm} '("katan")) (make-output dict input :katan)
             :else (multi-method dict comm)
             )) ""))

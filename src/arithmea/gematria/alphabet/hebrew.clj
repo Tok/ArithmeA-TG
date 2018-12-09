@@ -72,3 +72,5 @@
 (def hebrew-letters [:ALEPH :BETH :GIMEL :DALETH :HEH :VAV :ZAIN :CHETH :TETH :YUD :KAPH
                      :LAMED :MEM :NUN :SAMEKH :AYIN :PEH :TZADDI :QOPH :RESH :SHIN :TAV
                      :KAPH_FINAL :MEM_FINAL :NUN_FINAL :PEH_FINAL :TZADDI_FINAL])
+
+(defn number-value [method letter] (let [values (get hebrew-table letter)] (method values)))

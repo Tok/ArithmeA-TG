@@ -21,12 +21,12 @@
     :else [(final-if-last :KAPH last next) 0]
     ))
 
-(defn- handle-ayin-or-vav [last next] (if (is-first? last) :AYIN (final-if-last :KAPH last next)))
+(defn- handle-ayin-or-vav [last] (if (is-first? last) :AYIN :VAV))
 (defn- handle-o [last next]
   (cond
     (= \O next) [:AYIN 1]
     (= \U next) [:AYIN 1]
-    :else [(handle-ayin-or-vav last next) 0]))
+    :else [(handle-ayin-or-vav last) 0]))
 
 (defn- handle-p [last next after-next]
   (cond
@@ -57,6 +57,7 @@
 (defn hebrew-letter [last current next after-next]
   (case current
     nil [current 0]
+    \- [current 0]
     \A [:ALEPH 0]
     \B [:BETH 0]
     \C (handle-c last next)
