@@ -80,13 +80,16 @@
     last-update-id
     ))
 
-(defn update-state [dict chat-id offset]
+(defn- handle-chats [dict chat-ids messages offset]
+  (apply int (map max (map #(handle-messages dict % messages offset) chat-ids))))
+
+(defn update-state [dict chat-ids offset]
   (let [posts (get-updates offset "channel_post")
         status-code (posts :status)
         body (json/read-str (posts :body))
         ok? (get body "ok")
         messages (get body "result")]
     (if (and (= status-code 200) ok?)
-      (+ (handle-messages dict chat-id messages offset) 1)
+      (+ (handle-chats dict chat-ids messages offset) 1)
       (do (log/error "HTTP-Status:" status-code) offset)
       )))

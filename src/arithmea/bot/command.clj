@@ -18,8 +18,10 @@
 (defn multi-method [dict word]
   (let [clean-word (util/clean-up word)
         hebrew (trans/lat-to-heb clean-word)]
-    (str "Input: " (md/bold clean-word) " Transliteration: " (md/bold hebrew) \newline
-         (apply str (map #(single-output dict clean-word %) config/active-methods))
+    (str "Input: " (md/bold clean-word) \newline
+         (apply str (map #(single-output dict clean-word %) config/active-latin-methods))
+         "Transliteration: " (md/bold hebrew) \newline
+         (apply str (map #(single-output dict clean-word %) config/active-hebrew-methods))
          )))
 
 (defn- display-matches [matches]
@@ -49,7 +51,8 @@
 (defn- output-status [dict]
   (let [method-count (count dict)
         word-count (reduce + (map #(count %) (vals (:chal dict))))]
-    (str "Dict contains " (md/bold word-count) " words and " (md/bold method-count) " active methods.")))
+    (str "Dict contains " (md/bold word-count) " words and " (md/bold method-count) " active methods." \newline
+         "Active in " (md/bold (count config/chat-ids)) " chats. Polling Delay (ms): " (md/bold config/polling-time-ms))))
 
 (defn exec [dict command input]
   (if (not (str/blank? command))

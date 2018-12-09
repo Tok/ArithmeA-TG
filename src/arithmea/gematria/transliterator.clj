@@ -12,7 +12,11 @@
 (defn- final-if-last [letter last next]
   (if (make-final? last next) (hebrew/to-final letter) letter))
 
-(defn- handle-e [last next] (cond (= \E next) [:HEH 1] :else (if (is-first? last) [:HEH 1] [:MARKER 0])))
+(defn- handle-e [last next]
+  (cond
+    (= \E next) [:HEH 1]
+    :else (if (is-first? last) [:HEH 0] [:MARKER 0])))
+
 (defn- handle-c [last next]
   (cond
     (= \H next) [:CHETH 1]
