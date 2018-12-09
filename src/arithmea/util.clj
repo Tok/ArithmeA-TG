@@ -7,6 +7,6 @@
 (defn clean-up [s] (apply str (filter upper-case-letter? (str/upper-case (str/trim (str s))))))
 
 (defn slurp-words [res]
-  (let [content (-> (io/resource res) slurp str/split-lines)
+  (let [content (slurp (io/resource res))
         separated (str/split (apply str content) #" ")]
     (sort (distinct (filter word? (map str/upper-case separated))))))

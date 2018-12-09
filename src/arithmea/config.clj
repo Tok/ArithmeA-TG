@@ -8,7 +8,7 @@
 (def active-methods (concat active-latin-methods active-hebrew-methods))
 (def result-limit 10)
 
-(def polling-time-ms 200)
+(def polling-time-ms 2000)
 
 (def dict-data
   (let [common-words (util/slurp-words "1000-most-common-words.txt")
