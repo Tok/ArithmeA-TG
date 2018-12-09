@@ -1,4 +1,5 @@
-(ns arithmea.gematria.alphabet.hebrew)
+(ns arithmea.gematria.alphabet.hebrew
+  (:require [clojure.set :as set]))
 
 (def hebrew-table
   {:ALEPH        {:char \u05D0 :final? false :ordinal 1 :full 1 :katan 1}
@@ -28,6 +29,45 @@
    :NUN_FINAL    {:char \u05DF :final? true :ordinal 25 :full 700 :katan 7}
    :PEH_FINAL    {:char \u05E3 :final? true :ordinal 26 :full 800 :katan 8}
    :TZADDI_FINAL {:char \u05E5 :final? true :ordinal 27 :full 900 :katan 9}})
+
+(def char-table
+  {\u05D0 :ALEPH
+   \u05D1 :BETH
+   \u05D2 :GIMEL
+   \u05D3 :DALETH
+   \u05D4 :HEH
+   \u05D5 :VAV
+   \u05D6 :ZAIN
+   \u05D7 :CHETH
+   \u05D8 :TETH
+   \u05D9 :YUD
+   \u05DB :KAPH
+   \u05DC :LAMED
+   \u05DE :MEM
+   \u05E0 :NUN
+   \u05E1 :SAMEKH
+   \u05E2 :AYIN
+   \u05E4 :PEH
+   \u05E6 :TZADDI
+   \u05E7 :QOPH
+   \u05E8 :RESH
+   \u05E9 :SHIN
+   \u05EA :TAV
+   \u05DF :NUN_FINAL
+   \u05DA :KAPH_FINAL
+   \u05DD :MEM_FINAL
+   \u05E3 :PEH_FINAL
+   \u05E5 :TZADDI_FINAL})
+
+(def letter-table (set/map-invert char-table))
+
+(defn to-final [letter]
+  (case letter
+    :NUN :NUN_FINAL
+    :KAPH :KAPH_FINAL
+    :MEM :MEM_FINAL
+    :PEH :PEH_FINAL
+    :TZADDI :TZADDI_FINAL))
 
 (def hebrew-letters [:ALEPH :BETH :GIMEL :DALETH :HEH :VAV :ZAIN :CHETH :TETH :YUD :KAPH
                      :LAMED :MEM :NUN :SAMEKH :AYIN :PEH :TZADDI :QOPH :RESH :SHIN :TAV
