@@ -5,7 +5,8 @@
     [arithmea.bot.client :as bot]
     [arithmea.util :as util]
     [arithmea.gematria.calculator :as gem]
-    [arithmea.config :as config]))
+    [arithmea.config :as config])
+  (:gen-class))
 
 (defn- make-groups [method data] {method (group-by #(gem/calculate method %) data)})
 
