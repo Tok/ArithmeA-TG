@@ -6,16 +6,18 @@ This is the [ArithmeA Telegram-Bot](https://github.com/Tok/ArithmeA-TG) with sim
 
 ## Usage
 
-If you want to run your own instance of the ArithmeA Telegram Bot, setup your Bot with BotFather, 
-and add your secret token from into a new file at `/resources/secret-token.txt`. 
-Setup your configuration in `/src/arithmea/config.clj`, then run the bot directly or compile and build
-the standalone uberjar.
+If you want to run your own instance of the ArithmeA Telegram Bot, first setup your Bot with Telegrams BotFather, 
+then create and run the standalone jar like this:
 
-- Add `/resources/secret-token.txt` from with token from BotFather.
-- Change setup `/src/arithmea/config.clj`.
-- Compile with `lein compile`.
-- Run `lein uberjar` to build `/target/arithmea-[version]-SNAPSHOT-standalone.jar`.
-- Run the standalone jar directly or with one of the provided scripts `./run-standalone.sh` or `run-standalone.bat`.
+- Create a text file with the token from Telegrams BotFather to `/resources/secret-token.txt`.
+- Consider changing the setup at `/src/arithmea/config.clj` and providing your own wordlists at `/resources/wordlists`.
+- Compile the source using your IDE or directly in Leiningen with `lein compile`.
+- Run the `uberjar` Leiningen task to build `/target/arithmea-[version]-SNAPSHOT-standalone.jar`.
+- Then run the standalone jar directly or with one of the provided scripts `./run-standalone.sh` or `run-standalone.bat`.
+
+## Wordlist
+
+Found at: https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa.txt
 
 ## Gematria Method Documentation
 
