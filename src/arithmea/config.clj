@@ -6,7 +6,9 @@
 (def active-latin-methods [:ia :chal :pyth :naeq :tq :eq])
 (def active-hebrew-methods [:full :ordinal :katan])
 (def active-methods (concat active-latin-methods active-hebrew-methods))
+
 (def result-limit 10)
+(def display-limit 3)
 
 (def polling-time-ms 2000)
 

@@ -6,5 +6,3 @@
 (defn mention [text uid] (str "[" text "](tg://user?id=" uid ")"))
 (defn fixed [text] (str "`" text "`"))
 (defn block [text] (str "```" text "```"))
-
-(defn ref-link [match-count self-ref] (str " " self-ref " _" match-count "_"))

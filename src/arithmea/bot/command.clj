@@ -13,23 +13,27 @@
         matches (matcher/find-matches method value)
         match-count (str "[" (count matches) "]")
         method-name (get gem/method-names method)
-        self-ref (str "/" method-name "\\_" value)]
-    (str method-name ": " (md/bold value) " " (md/ref-link match-count self-ref) \newline)
+        self-ref (str "/" method-name "\\_" value)
+        selected-matches (vec (take config/display-limit matches))
+        match-refs (map #(str "/" %) selected-matches)
+        ref-display (apply str (interpose "|" match-refs) )
+        count-display (md/italic (str "[" match-count "] "))]
+    (str self-ref ": (" ref-display ") " (md/italic count-display)\newline)
     ))
 
 (defn display-anagrams [word]
   (let [anagrams (matcher/find-anagrams word)]
     (if (not (empty? anagrams))
-      (str "Anagrams: " (md/italic anagrams) \newline) "")))
+      (md/block anagrams))))
 
 (defn multi-method [word]
   (let [clean-word (util/clean-up word)
         hebrew (trans/lat-to-heb clean-word)]
-    (str "Input: " (md/bold clean-word) \newline
-         (display-anagrams word)
+    (str (md/block clean-word) \newline
          (apply str (map #(single-output clean-word %) config/active-latin-methods))
-         "Transliteration: " (md/bold hebrew) \newline
+         (md/block hebrew) \newline
          (apply str (map #(single-output clean-word %) config/active-hebrew-methods))
+         (display-anagrams word) \newline
          )))
 
 (defn- display-matches [matches]
@@ -47,17 +51,6 @@
     (str "Method: " (md/bold method-name) " Value: " (md/bold value) \newline
          (display-matches matches))))
 
-(defn- make-output [word method]
-  (let [clean-word (util/clean-up word)
-        value (gem/calculate method clean-word)
-        matches (matcher/find-matches method value)
-        method-name (get gem/method-names method)
-        anagrams (matcher/find-anagrams word)]
-    (str "Input: " (md/bold clean-word) " Method: " (md/bold method-name) " Value: " (md/bold value) \newline
-         (display-anagrams word)
-         (md/fixed (apply str (map #(str % "(" (gem/calculate method (str %)) ") ") (seq clean-word)))) \newline
-         (display-matches matches))))
-
 (defn- output-status []
   (let [method-count (count dict/dict)
         word-count (reduce + (map #(count %) (vals (:chal dict/dict))))]
@@ -69,15 +62,5 @@
     (let [comm (str/lower-case command)]
       (cond (= "echo" comm) input
             (= "status" comm) (output-status)
-            (some #{comm} '("chal" "chaldean")) (make-output input :chal)
-            (some #{comm} '("pyth" "pythagorean")) (make-output input :pyth)
-            (some #{comm} '("simple" "ia")) (make-output input :ia)
-            (some #{comm} '("naeq")) (make-output input :naeq)
-            (some #{comm} '("tq" "trigrammaton")) (make-output input :tq)
-            (some #{comm} '("schluessel")) (make-output input :ger)
-            (some #{comm} '("english" "azure" "eq" "eq26")) (make-output input :eq)
-            (some #{comm} '("full" "hebrew")) (make-output input :full)
-            (some #{comm} '("ordinal")) (make-output input :ordinal)
-            (some #{comm} '("katan")) (make-output input :katan)
             :else (multi-method comm)
             )) ""))
