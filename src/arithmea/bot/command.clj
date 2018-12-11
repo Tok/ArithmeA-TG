@@ -11,10 +11,11 @@
 (defn- single-output [word method]
   (let [value (gem/calculate method word)
         matches (matcher/find-matches method value)
+        shuffled (shuffle matches)
         match-count (str "[" (count matches) "]")
         method-name (get gem/method-names method)
         self-ref (str "/" method-name "\\_" value)
-        selected-matches (vec (take config/display-limit matches))
+        selected-matches (vec (take config/display-limit shuffled))
         match-refs (map #(str "/" %) selected-matches)
         ref-display (apply str (interpose "|" match-refs) )
         count-display (md/italic (str "[" match-count "] "))]
