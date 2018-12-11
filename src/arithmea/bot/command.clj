@@ -31,9 +31,9 @@
         hebrew (trans/lat-to-heb clean-word)]
     (str (md/block clean-word) \newline
          (apply str (map #(single-output clean-word %) config/active-latin-methods))
+         (display-anagrams word) \newline
          (md/block hebrew) \newline
          (apply str (map #(single-output clean-word %) config/active-hebrew-methods))
-         (display-anagrams word) \newline
          )))
 
 (defn- display-matches [matches]
