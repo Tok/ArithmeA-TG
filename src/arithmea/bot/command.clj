@@ -2,6 +2,7 @@
   (:require [arithmea.gematria.calculator :as gem]
             [arithmea.gematria.matcher :as matcher]
             [arithmea.gematria.transliterator :as trans]
+            [arithmea.bot.emoji :as emoji]
             [arithmea.bot.md :as md]
             [arithmea.config :as config]
             [arithmea.dict :as dict]
@@ -49,14 +50,16 @@
 (defn show-value [method value]
   (let [matches (matcher/find-matches method value)
         method-name (get gem/method-names method)]
-    (str "Method: " (md/bold method-name) " Value: " (md/bold value) \newline
+    (str (emoji/emojify (str value)) " Method: " (md/bold method-name) \newline
          (display-matches matches))))
 
 (defn- output-status []
   (let [method-count (count dict/dict)
         word-count (reduce + (map #(count %) (vals (:chal dict/dict))))]
-    (str "Dict contains " (md/bold word-count) " words and " (md/bold method-count) " active methods." \newline
-         "Active in " (md/bold (count config/chat-ids)) " chats. Polling Delay (ms): " (md/bold config/polling-time-ms))))
+    (str "Dict contains " (md/bold word-count) " words and "
+         (md/bold method-count) " active methods." \newline
+         "Active in " (md/bold (count config/chat-ids))
+         " chats. Polling Delay (ms): " (md/bold config/polling-time-ms))))
 
 (defn exec [command input]
   (if (not (str/blank? command))
