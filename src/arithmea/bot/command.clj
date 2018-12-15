@@ -64,11 +64,12 @@
          " chats. Polling Delay (ms): " (md/bold config/polling-time-ms))))
 
 (defn- output-qualifiers []
-  (str (emoji/green-asterisk) " Fibonacci Number" \newline
-       (emoji/orange-asterisk) " Cube Number" \newline
-       (emoji/exclamation-mark) " Master Number" \newline
-       (emoji/double-exclamation-mark) " Super Master Number" \newline
+  (str (emoji/exclamation-mark) " Master Number / Multiple Of 11" \newline
+       (emoji/double-exclamation-mark) " Super Master Number / Multiple Of 111" \newline
+       (emoji/hundred) " Multiple Of 100" \newline
        (emoji/brightness) " Other Highlight Reason" \newline
+       (emoji/green-asterisk) " Fibonacci Number" \newline
+       (emoji/orange-asterisk) " Cube Number" \newline
        (emoji/blue-p) " Prime Number" \newline
        (emoji/white-square) " Even Number" \newline
        (emoji/white-circle) " Odd Number"))
