@@ -2,6 +2,7 @@
   (:require [arithmea.gematria.calculator :as gem]
             [arithmea.gematria.matcher :as matcher]
             [arithmea.gematria.transliterator :as trans]
+            [arithmea.gematria.qualifier :as quali]
             [arithmea.bot.emoji :as emoji]
             [arithmea.bot.md :as md]
             [arithmea.config :as config]
@@ -18,9 +19,10 @@
         self-ref (str "/" method-name "\\_" value)
         selected-matches (vec (take config/display-limit shuffled))
         match-refs (map #(str "/" %) selected-matches)
-        ref-display (apply str (interpose "|" match-refs) )
-        count-display (md/italic (str "[" match-count "] "))]
-    (str self-ref ": (" ref-display ") " (md/italic count-display)\newline)
+        ref-display (apply str (interpose "|" match-refs))
+        count-display (md/italic (str "[" match-count "] "))
+        qualifier (quali/highlight-symbol value)]
+    (str qualifier " " self-ref ": (" ref-display ") " (md/italic count-display) \newline)
     ))
 
 (defn display-anagrams [word]
@@ -31,10 +33,10 @@
 (defn multi-method [word]
   (let [clean-word (util/clean-up word)
         hebrew (trans/lat-to-heb clean-word)]
-    (str (md/block clean-word) \newline
+    (str (md/bold clean-word) \newline
          (apply str (map #(single-output clean-word %) config/active-latin-methods))
-         (display-anagrams word) \newline
-         (md/block hebrew) \newline
+         (display-anagrams word)
+         (md/bold hebrew) \newline
          (apply str (map #(single-output clean-word %) config/active-hebrew-methods))
          )))
 
@@ -61,10 +63,21 @@
          "Active in " (md/bold (count config/chat-ids))
          " chats. Polling Delay (ms): " (md/bold config/polling-time-ms))))
 
+(defn- output-qualifiers []
+  (str (emoji/green-asterisk) " Fibonacci Number" \newline
+       (emoji/orange-asterisk) " Cube Number" \newline
+       (emoji/exclamation-mark) " Master Number" \newline
+       (emoji/double-exclamation-mark) " Super Master Number" \newline
+       (emoji/brightness) " Other Highlight Reason" \newline
+       (emoji/blue-p) " Prime Number" \newline
+       (emoji/white-square) " Even Number" \newline
+       (emoji/white-circle) " Odd Number"))
+
 (defn exec [command input]
   (if (not (str/blank? command))
     (let [comm (str/lower-case command)]
       (cond (= "echo" comm) input
             (= "status" comm) (output-status)
+            (= "qualifiers" comm) (output-qualifiers)
             :else (multi-method comm)
             )) ""))

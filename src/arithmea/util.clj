@@ -8,6 +8,8 @@
 
 (defn word? [s] (every? upper-case-letter? (seq (str/upper-case s))))
 
+(defn prime? [n] (every? false? (map #(= 0 (mod n %)) (range 2 (Math/sqrt n)))))
+
 (defn clean-up [s]
   (let [upper (str/upper-case (str/trim (str s)))]
     (apply str (filter upper-case-letter? upper))))
