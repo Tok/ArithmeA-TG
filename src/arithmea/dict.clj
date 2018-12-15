@@ -6,11 +6,13 @@
             [clojure.tools.logging :as log]))
 
 (defn- make-groups [method data] {method (group-by #(gem/calculate method %) data)})
+(defn- clean-data [d] (->> d (map str/upper-case) (filter util/word?) distinct sort))
 (defn- create-dict []
-  (let [upper (map str/upper-case config/dict-data)
-        clean-data (sort (distinct (filter util/word? upper)))]
-    (log/info "Loading dict with" (count clean-data) "words.")
-    (into (sorted-map) (map #(make-groups % clean-data) config/active-methods))
-    ))
+  (let [data (clean-data config/dict-data)
+        dict-map (map #(make-groups % data) config/active-methods)]
+    (log/info "Loading dict with" (count data) "words.")
+    (into (sorted-map) dict-map)))
 
 (def dict (create-dict))
+
+(defn word-count [] (->> dict :ia vals (map #(count %)) (reduce +)))

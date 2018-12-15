@@ -1,36 +1,38 @@
 (ns arithmea.gematria.alphabet.hebrew
   (:require [clojure.set :as set]))
 
-(def hebrew-table
-  {:ALEPH        {:char \u05D0 :final? false :ordinal 1 :full 1 :katan 1}
-   :BETH         {:char \u05D1 :final? false :ordinal 2 :full 2 :katan 2}
-   :GIMEL        {:char \u05D2 :final? false :ordinal 3 :full 3 :katan 3}
-   :DALETH       {:char \u05D3 :final? false :ordinal 4 :full 4 :katan 4}
-   :HEH          {:char \u05D4 :final? false :ordinal 5 :full 5 :katan 5}
-   :VAV          {:char \u05D5 :final? false :ordinal 6 :full 6 :katan 6}
-   :ZAIN         {:char \u05D6 :final? false :ordinal 7 :full 7 :katan 7}
-   :CHETH        {:char \u05D7 :final? false :ordinal 8 :full 8 :katan 8}
-   :TETH         {:char \u05D8 :final? false :ordinal 9 :full 9 :katan 9}
-   :YUD          {:char \u05D9 :final? false :ordinal 10 :full 10 :katan 1}
-   :KAPH         {:char \u05DB :final? false :ordinal 11 :full 20 :katan 2}
-   :LAMED        {:char \u05DC :final? false :ordinal 12 :full 30 :katan 3}
-   :MEM          {:char \u05DE :final? false :ordinal 13 :full 40 :katan 4}
-   :NUN          {:char \u05E0 :final? false :ordinal 14 :full 50 :katan 5}
-   :SAMEKH       {:char \u05E1 :final? false :ordinal 15 :full 60 :katan 6}
-   :AYIN         {:char \u05E2 :final? false :ordinal 16 :full 70 :katan 7}
-   :PEH          {:char \u05E4 :final? false :ordinal 17 :full 80 :katan 8}
-   :TZADDI       {:char \u05E6 :final? false :ordinal 18 :full 90 :katan 9} ;*
-   :QOPH         {:char \u05E7 :final? false :ordinal 19 :full 100 :katan 1}
-   :RESH         {:char \u05E8 :final? false :ordinal 20 :full 200 :katan 2}
-   :SHIN         {:char \u05E9 :final? false :ordinal 21 :full 300 :katan 3}
-   :TAV          {:char \u05EA :final? false :ordinal 22 :full 400 :katan 4}
-   :KAPH_FINAL   {:char \u05DA :final? true :ordinal 23 :full 500 :katan 5}
-   :MEM_FINAL    {:char \u05DD :final? true :ordinal 24 :full 600 :katan 6}
-   :NUN_FINAL    {:char \u05DF :final? true :ordinal 25 :full 700 :katan 7}
-   :PEH_FINAL    {:char \u05E3 :final? true :ordinal 26 :full 800 :katan 8}
-   :TZADDI_FINAL {:char \u05E5 :final? true :ordinal 27 :full 900 :katan 9}})
+(defn- row [char final? ordinal full katan]
+  {:char char :final? final? :ordinal ordinal :full full :katan katan})
+(def ^:private hebrew-table
+  {:ALEPH        (row \u05D0 false 1 1 1)
+   :BETH         (row \u05D1 false 2 2 2)
+   :GIMEL        (row \u05D2 false 3 3 3)
+   :DALETH       (row \u05D3 false 4 4 4)
+   :HEH          (row \u05D4 false 5 5 5)
+   :VAV          (row \u05D5 false 6 6 6)
+   :ZAIN         (row \u05D6 false 7 7 7)
+   :CHETH        (row \u05D7 false 8 8 8)
+   :TETH         (row \u05D8 false 9 9 9)
+   :YUD          (row \u05D9 false 10 10 1)
+   :KAPH         (row \u05DB false 11 20 2)
+   :LAMED        (row \u05DC false 12 30 3)
+   :MEM          (row \u05DE false 13 40 4)
+   :NUN          (row \u05E0 false 14 50 5)
+   :SAMEKH       (row \u05E1 false 15 60 6)
+   :AYIN         (row \u05E2 false 16 70 7)
+   :PEH          (row \u05E4 false 17 80 8)
+   :TZADDI       (row \u05E6 false 18 90 9)                 ;*
+   :QOPH         (row \u05E7 false 19 100 1)
+   :RESH         (row \u05E8 false 20 200 2)
+   :SHIN         (row \u05E9 false 21 300 3)
+   :TAV          (row \u05EA false 22 400 4)
+   :KAPH_FINAL   (row \u05DA true 23 500 5)
+   :MEM_FINAL    (row \u05DD true 24 600 6)
+   :NUN_FINAL    (row \u05DF true 25 700 7)
+   :PEH_FINAL    (row \u05E3 true 26 800 8)
+   :TZADDI_FINAL (row \u05E5 true 27 900 9)})
 
-(def char-table
+(def ^:private char-table
   {\u05D0 :ALEPH
    \u05D1 :BETH
    \u05D2 :GIMEL
@@ -69,8 +71,5 @@
     :PEH :PEH_FINAL
     :TZADDI :TZADDI_FINAL))
 
-(def hebrew-letters [:ALEPH :BETH :GIMEL :DALETH :HEH :VAV :ZAIN :CHETH :TETH :YUD :KAPH
-                     :LAMED :MEM :NUN :SAMEKH :AYIN :PEH :TZADDI :QOPH :RESH :SHIN :TAV
-                     :KAPH_FINAL :MEM_FINAL :NUN_FINAL :PEH_FINAL :TZADDI_FINAL])
-
-(defn number-value [method letter] (let [values (get hebrew-table letter)] (method values)))
+(defn number-value [method letter]
+  (let [values (get hebrew-table letter)] (method values)))

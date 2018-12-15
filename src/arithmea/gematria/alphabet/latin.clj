@@ -1,31 +1,33 @@
 (ns arithmea.gematria.alphabet.latin)
 
-(def latin-table
-  {\A {:ia 1 :chal 1 :pyth 1 :naeq 1 :tq 5 :ger 1 :eq 1}
-   \B {:ia 2 :chal 2 :pyth 2 :naeq 20 :tq 20 :ger 0 :eq 200}
-   \C {:ia 3 :chal 3 :pyth 3 :naeq 13 :tq 2 :ger 0 :eq 40}
-   \D {:ia 4 :chal 4 :pyth 4 :naeq 6 :tq 23 :ger 0 :eq 6}
-   \E {:ia 5 :chal 5 :pyth 5 :naeq 25 :tq 13 :ger 2 :eq 700}
-   \F {:ia 6 :chal 8 :pyth 6 :naeq 18 :tq 12 :ger 0 :eq 90}
-   \G {:ia 7 :chal 3 :pyth 7 :naeq 11 :tq 11 :ger 7 :eq 20}
-   \H {:ia 8 :chal 5 :pyth 8 :naeq 4 :tq 3 :ger 8 :eq 4}
-   \I {:ia 9 :chal 1 :pyth 9 :naeq 23 :tq 26 :ger 3 :eq 500}
-   \J {:ia 10 :chal 1 :pyth 1 :naeq 16 :tq 7 :ger 0 :eq 70}
-   \K {:ia 11 :chal 2 :pyth 2 :naeq 9 :tq 17 :ger 0 :eq 9}
-   \L {:ia 12 :chal 3 :pyth 3 :naeq 2 :tq 1 :ger 9 :eq 2}
-   \M {:ia 13 :chal 4 :pyth 4 :naeq 21 :tq 21 :ger 0 :eq 300}
-   \N {:ia 14 :chal 5 :pyth 5 :naeq 14 :tq 24 :ger 0 :eq 50}
-   \O {:ia 15 :chal 7 :pyth 6 :naeq 19 :tq 10 :ger 4 :eq 7}
-   \P {:ia 16 :chal 8 :pyth 7 :naeq 26 :tq 4 :ger 0 :eq 800}
-   \Q {:ia 17 :chal 1 :pyth 8 :naeq 17 :tq 16 :ger 0 :eq 100}
-   \R {:ia 18 :chal 2 :pyth 9 :naeq 12 :tq 14 :ger 0 :eq 30}
-   \S {:ia 19 :chal 3 :pyth 1 :naeq 5 :tq 15 :ger 6 :eq 5}
-   \T {:ia 20 :chal 4 :pyth 2 :naeq 24 :tq 9 :ger 0 :eq 600}
-   \U {:ia 21 :chal 6 :pyth 3 :naeq 17 :tq 25 :ger 5 :eq 80}
-   \V {:ia 22 :chal 6 :pyth 4 :naeq 10 :tq 22 :ger 0 :eq 10}
-   \W {:ia 23 :chal 6 :pyth 5 :naeq 3 :tq 8 :ger 0 :eq 3}
-   \X {:ia 24 :chal 5 :pyth 6 :naeq 22 :tq 6 :ger 0 :eq 400}
-   \Y {:ia 25 :chal 1 :pyth 7 :naeq 15 :tq 18 :ger 7 :eq 60}
-   \Z {:ia 26 :chal 7 :pyth 8 :naeq 8 :tq 19 :ger 0 :eq 8}})
+(defn- row [ia chal pyth naeq tq ger eq]
+  {:ia ia :chal chal :pyth pyth :naeq naeq :tq tq :ger ger :eq eq})
+(def ^:private latin-table
+  {\A (row 1 1 1 1 5 1 1)
+   \B (row 2 2 2 20 20 0 200)
+   \C (row 3 3 3 13 2 0 40)
+   \D (row 4 4 4 6 23 0 6)
+   \E (row 5 5 5 25 13 2 700)
+   \F (row 6 8 6 18 12 0 90)
+   \G (row 7 3 7 11 11 7 20)
+   \H (row 8 5 8 4 3 8 4)
+   \I (row 9 1 9 23 26 3 500)
+   \J (row 10 1 1 16 7 0 70)
+   \K (row 11 2 2 9 17 0 9)
+   \L (row 12 3 3 2 1 9 2)
+   \M (row 13 4 4 21 21 0 300)
+   \N (row 14 5 5 14 24 0 50)
+   \O (row 15 7 6 19 10 4 7)
+   \P (row 16 8 7 26 4 0 800)
+   \Q (row 17 1 8 17 16 0 100)
+   \R (row 18 2 9 12 14 0 30)
+   \S (row 19 3 1 5 15 6 5)
+   \T (row 20 4 2 24 9 0 600)
+   \U (row 21 6 3 17 25 5 80)
+   \V (row 22 6 4 10 22 0 10)
+   \W (row 23 6 5 3 8 0 3)
+   \X (row 24 5 6 22 6 0 400)
+   \Y (row 25 1 7 15 18 7 60)
+   \Z (row 26 7 8 8 19 0 8)})
 
 (defn number-value [method c] (let [values (get latin-table c)] (method values)))

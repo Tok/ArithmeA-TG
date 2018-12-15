@@ -22,23 +22,21 @@
         ref-display (apply str (interpose "|" match-refs))
         count-display (md/italic (str "[" match-count "] "))
         qualifier (quali/highlight-symbol value)]
-    (str qualifier " " self-ref ": (" ref-display ") " (md/italic count-display) \newline)
-    ))
+    (str qualifier " " self-ref ": (" ref-display ") "
+         (md/italic count-display) \newline)))
 
 (defn display-anagrams [word]
   (let [anagrams (matcher/find-anagrams word)]
-    (if (not (empty? anagrams))
-      (md/block anagrams))))
+    (when (seq anagrams) (md/block anagrams))))
 
 (defn multi-method [word]
   (let [clean-word (util/clean-up word)
-        hebrew (trans/lat-to-heb clean-word)]
+        hebrew (trans/lat->heb-str clean-word)]
     (str (md/bold clean-word) \newline
          (apply str (map #(single-output clean-word %) config/active-latin-methods))
          (display-anagrams word)
          (md/bold hebrew) \newline
-         (apply str (map #(single-output clean-word %) config/active-hebrew-methods))
-         )))
+         (apply str (map #(single-output clean-word %) config/active-hebrew-methods)))))
 
 (defn- display-matches [matches]
   (let [total-count (count matches)]
@@ -46,7 +44,8 @@
       (let [shuffled (shuffle matches)
             selection (take config/result-limit shuffled)
             refs (map #(str "/" %) selection)]
-        (str "Matches: (" (count selection) " of " total-count "): " (str/join ", " refs)))
+        (str "Matches: (" (count selection)
+             " of " total-count "): " (str/join ", " refs)))
       "No Matches Found.")))
 
 (defn show-value [method value]
@@ -75,7 +74,7 @@
        (emoji/white-circle) " Odd Number"))
 
 (defn exec [command input]
-  (if (not (str/blank? command))
+  (if-not (str/blank? command)
     (let [comm (str/lower-case command)]
       (cond (= "echo" comm) input
             (= "status" comm) (output-status)

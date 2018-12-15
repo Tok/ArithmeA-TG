@@ -7,15 +7,15 @@
 
 (defn- latin-reduce [method s] (reduce + 0 (map #(latin/number-value method %) s)))
 (defn- hebrew-reduce [method vec] (reduce + 0 (map #(hebrew/number-value method %) vec)))
+
 (defn calculate [method s]
   (let [clean (util/clean-up s)
-        heb (trans/lat-to-heb-vec clean)]
-    (cond
-      (= :ordinal method) (hebrew-reduce method heb)
-      (= :full method) (hebrew-reduce method heb)
-      (= :katan method) (hebrew-reduce method heb)
-      :else (latin-reduce method clean)
-      )))
+        heb (trans/lat->heb clean)]
+    (case method
+      :ordinal (hebrew-reduce method heb)
+      :full (hebrew-reduce method heb)
+      :katan (hebrew-reduce method heb)
+      (latin-reduce method clean))))
 
 (def method-names {:ia      "Simple" :chal "Chal" :pyth "Pyth"
                    :naeq    "NAEQ" :tq "TQ" :eq "EQ" :ger "German"

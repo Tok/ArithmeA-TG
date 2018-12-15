@@ -112,7 +112,7 @@
    9999 :hyper-master
    })
 
-(def qualifier-map
+(def ^:private qualifier-map
   {:fibonacci-number (green-asterisk)
    :cube-number      (orange-asterisk)
    :master-number    (exclamation-mark)
@@ -122,12 +122,10 @@
    :other            (brightness)})
 
 (defn- secondary-qualifier [n]
-  (if (util/prime? n) (blue-p) (if (even? n) (white-square) (white-circle)))
-  )
+  (if (util/prime? n) (blue-p) (if (even? n) (white-square) (white-circle))))
 
 (defn highlight-symbol [n]
   (let [reason (get reason-map (int n))
         pq (get qualifier-map reason)
         sq (secondary-qualifier n)]
-    (if (nil? pq) sq pq)
-    ))
+    (if (nil? pq) sq pq)))

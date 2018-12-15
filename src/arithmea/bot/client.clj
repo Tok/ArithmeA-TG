@@ -7,7 +7,7 @@
             [clojure.tools.logging :as log]
             [clojure.string :as str]))
 
-(def secret-token (slurp (io/resource "secret-token.txt")))
+(def secret-token (-> "secret-token.txt" io/resource slurp))
 
 (defn- bot-url "See https://core.telegram.org/bots/api#authorizing-your-bot" []
   (let [api-url "https://api.telegram.org/bot"]
@@ -33,11 +33,14 @@
 
 (defn send-channel-message [chat-id text]
   (let [params {"chat_id" chat-id "text" text "parse_mode" "Markdown"}]
-    (if (not (str/blank? text)) (do-query "/sendMessage" params))))
+    (if-not (str/blank? text) (do-query "/sendMessage" params))))
 
-(defn- ref-command? [text] (and (str/starts-with? text "/") (str/includes? text "@ArithmeA_bot")))
-(defn- direct-command? [text] (and (str/starts-with? text "/arithmea") (str/includes? text " ")))
-(defn- command? [text] (and (not (str/blank? text)) (or (ref-command? text) (direct-command? text))))
+(defn- ref-command? [text]
+  (and (str/starts-with? text "/") (str/includes? text "@ArithmeA_bot")))
+(defn- direct-command? [text]
+  (and (str/starts-with? text "/arithmea") (str/includes? text " ")))
+(defn- command? [text]
+  (and (not (str/blank? text)) (or (ref-command? text) (direct-command? text))))
 
 (defn- handle-ref [chat-id text]
   (let [raw (str/replace text #"/" "")
@@ -49,8 +52,7 @@
             result (command/show-value method value)]
         (send-channel-message chat-id result))
       (let [result (command/multi-method command)]
-        (send-channel-message chat-id result))
-      )))
+        (send-channel-message chat-id result)))))
 
 (defn- handle-direct [chat-id text]
   (let [command-line (str/split text #" ")
@@ -68,7 +70,7 @@
 
 (defn- handle-messages [chat-id messages last-update-id]
   (log/debug "handle-messages: " last-update-id)
-  (if (not (empty? messages))
+  (if (seq messages)
     (let [msg (first (seq messages))
           update-id (get msg "update_id")
           message (get msg "message")
@@ -77,8 +79,7 @@
       (println (str "@" chat-id " " from-user ": " text))
       (handle-command chat-id from-user text)
       (recur chat-id (rest messages) update-id))
-    last-update-id
-    ))
+    last-update-id))
 
 (defn- handle-chats [chat-ids messages offset]
   (apply int (map max (map #(handle-messages % messages offset) chat-ids))))
@@ -91,5 +92,4 @@
         messages (get body "result")]
     (if (and (= status-code 200) ok?)
       (+ (handle-chats chat-ids messages offset) 1)
-      (do (log/error "HTTP-Status:" status-code) offset)
-      )))
+      (do (log/error "HTTP-Status:" status-code) offset))))

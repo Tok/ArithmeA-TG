@@ -9,8 +9,8 @@
   (Thread/sleep config/polling-time-ms)
   (recur (bot/update-state config/chat-ids offset)))
 
-(defn -main "ArithmeA" [& args]
+(defn -main "ArithmeA" [& _]
   (let []
-    (log/debug (reduce + (map #(count %) (vals (:ia dict/dict)))) "Words.")
+    (log/debug dict/word-count "Words.")
     (log/info (count config/active-methods) "active Methods.")
     (main-loop 0)))

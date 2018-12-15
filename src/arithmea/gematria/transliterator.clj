@@ -10,50 +10,48 @@
   (if (make-final? last next) (hebrew/to-final letter) letter))
 
 (defn- handle-e [last next]
-  (cond
-    (= \E next) [:HEH 1]
-    :else (if (is-first? last) [:HEH 0] [:MARKER 0])))
+  (case next
+    \E [:HEH 1]
+    (if (is-first? last) [:HEH 0] [:MARKER 0])))
 
 (defn- handle-c [last next]
-  (cond
-    (= \H next) [:CHETH 1]
-    (= \C next) [(final-if-last :KAPH last next) 1]
-    (= \K next) [(final-if-last :KAPH last next) 1]
-    :else [(final-if-last :KAPH last next) 0]
-    ))
+  (case next
+    \H [:CHETH 1]
+    \C [(final-if-last :KAPH last next) 1]
+    \K [(final-if-last :KAPH last next) 1]
+    [(final-if-last :KAPH last next) 0]))
 
 (defn- handle-ayin-or-vav [last] (if (is-first? last) :AYIN :VAV))
 (defn- handle-o [last next]
-  (cond
-    (= \O next) [:AYIN 1]
-    (= \U next) [:AYIN 1]
-    :else [(handle-ayin-or-vav last) 0]))
+  (case next
+    \O [:AYIN 1]
+    \U [:AYIN 1]
+    [(handle-ayin-or-vav last) 0]))
 
 (defn- handle-p [last next after-next]
-  (cond
-    (= \H next) [(final-if-last :PEH next after-next) 1]
-    :else [(final-if-last :PEH last next) 0]
-    ))
+  (case next
+    \H [(final-if-last :PEH next after-next) 1]
+    [(final-if-last :PEH last next) 0]))
 
 (defn- handle-q [next]
-  (cond
-    (= \U next) [:QOPH 1]
-    :else [:QOPH 0]))
+  (case next
+    \U [:QOPH 1]
+    [:QOPH 0]))
 
 (defn- handle-s [next after-next]
-  (cond
-    (= \C next) (if (= after-next \H) [:SHIN 2] [:SAMEKH 0])
-    (= \H next) [:SHIN 1]
-    (= \S next) [:ZAIN 1]
-    :else [:SAMEKH 0]))
+  (case next
+    \C (if (= after-next \H) [:SHIN 2] [:SAMEKH 0])
+    \H [:SHIN 1]
+    \S [:ZAIN 1]
+    [:SAMEKH 0]))
 
 (defn- handle-t [next after-next]
-  (cond
-    (= \Z next) [:TZADDI 1]
-    (= \X next) [:TZADDI 1]
-    (= \H next) [:TAV 1]
-    (= \S next) [:ZAIN 1]
-    :else [:TETH 0]))
+  (case next
+    \Z [:TZADDI 1]
+    \X [:TZADDI 1]
+    \H [:TAV 1]
+    \S [:ZAIN 1]
+    [:TETH 0]))
 
 (defn hebrew-letter [last current next after-next]
   (case current
@@ -100,10 +98,10 @@
           drop-count (get result 1)]
       (recur (vec (rest (drop drop-count parts))) (conj accu translit)))))
 
-(defn lat-to-heb-vec [lat]
+(defn lat->heb [lat]
   (let [parts (vec (concat [nil] lat [nil] [nil] [nil]))]
     (filter #(not (= :MARKER %)) (evaluate parts []))))
 
-(defn lat-to-heb [lat]
-  (let [vec (lat-to-heb-vec lat)]
+(defn lat->heb-str [lat]
+  (let [vec (lat->heb lat)]
     (apply str (map #(hebrew/letter-table %) vec))))

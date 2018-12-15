@@ -13,7 +13,7 @@
 (defn anagram? [word compare]
   (let [word-group (compare-groups (util/clean-up word))
         compare-group (compare-groups (util/clean-up compare))]
-    (and (not (= word compare)) (= word-group compare-group))))
+    (and (not= word compare) (= word-group compare-group))))
 
 (defn find-anagrams [word]
   (let [clean (util/clean-up word)
