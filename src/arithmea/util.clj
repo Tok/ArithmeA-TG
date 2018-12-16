@@ -1,5 +1,6 @@
 (ns arithmea.util
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [clojure.java.io :as io]))
 
 (defn- blank->dash [s] (str/replace s #" " "-"))
 
@@ -16,10 +17,12 @@
        (filter upper-case-letter?)
        (apply str)))
 
-(defn slurp-words [res]
-  (-> res clojure.java.io/resource slurp
+(defn slurp-file [file]
+  (-> file slurp
       (->> (apply str))
       (str/split #"[\n\r\s]+")
       (->> (map str/upper-case)
            (filter word?)
            distinct sort)))
+
+(defn slurp-resource [res] (-> res io/resource slurp-file))

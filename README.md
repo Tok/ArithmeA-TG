@@ -10,7 +10,7 @@ If you want to run your own instance of the ArithmeA Telegram Bot, first setup y
 then create and run the standalone jar like this:
 
 - Create a text file with the token from Telegrams BotFather to `/resources/secret-token.txt`.
-- Consider changing the setup at `/src/arithmea/config.clj` and providing your own wordlists at `/resources/wordlists`.
+- Consider changing the setup at `/src/arithmea/config.clj` and providing your own wordlists in `/resources/wordlists`.
 - Compile the source using your IDE or directly in Leiningen with `lein compile`.
 - Run the `uberjar` Leiningen task to build `/target/arithmea-[version]-SNAPSHOT-standalone.jar`.
 - Then run the standalone jar directly or with one of the provided scripts `./run-standalone.sh` or `run-standalone.bat`.

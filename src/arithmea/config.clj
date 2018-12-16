@@ -1,5 +1,6 @@
 (ns arithmea.config
-  (:require [arithmea.util :as util]))
+  (:require [arithmea.util :as util]
+            [clojure.java.io :as io]))
 
 (def chat-ids ["-1001280104881"])
 
@@ -13,8 +14,6 @@
 (def polling-time-ms 5000)
 
 (def dict-data
-  (let [dir "wordlists/"
-        common-words (util/slurp-words (str dir "google-10000-english-usa.txt"))
-        arithmea-list (util/slurp-words (str dir "arithmea-words.txt"))
-        test-list (util/slurp-words (str dir "test-words.txt"))]
-    (distinct (concat common-words arithmea-list test-list))))
+  (let [path (-> "wordlists/" io/resource io/file)
+        files (filter #(.isFile %) (file-seq path))]
+    (distinct (apply concat (map #(util/slurp-file %) files)))))
