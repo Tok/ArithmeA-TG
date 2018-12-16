@@ -1,4 +1,8 @@
-(ns arithmea.gematria.alphabet.latin)
+(ns arithmea.gematria.alphabet.latin
+  (:require [clojure.spec.alpha :as s]))
+
+(def latin-method #{:ia :chal :pyth :naeq :tq :ger :eq})
+(s/def ::latin-method latin-method)
 
 (defn- row [ia chal pyth naeq tq ger eq]
   {:ia ia :chal chal :pyth pyth :naeq naeq :tq tq :ger ger :eq eq})
@@ -30,4 +34,8 @@
    \Y (row 25 1 7 15 18 7 60)
    \Z (row 26 7 8 8 19 0 8)})
 
-(defn number-value [method c] (let [values (get latin-table c)] (method values)))
+(defn number-value [method c]
+  {:pre  [(s/valid? ::latin-method method)
+          (s/valid? char? c)]
+   :post [(s/valid? nat-int? %)]}
+  (let [values (get latin-table c)] (method values)))

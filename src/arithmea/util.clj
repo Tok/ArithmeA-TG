@@ -1,9 +1,9 @@
 (ns arithmea.util
   (:require [clojure.string :as str]))
 
-(defn- upper-case-letter? [c] (contains? (set (map char (range 65 91))) c))
-
 (defn- blank->dash [s] (str/replace s #" " "-"))
+
+(defn upper-case-letter? [c] (contains? (set (map char (range 65 91))) c))
 
 (defn- valid? [s] (or (= "-" s) (upper-case-letter? s)))
 

@@ -10,7 +10,7 @@
 (def result-limit 10)
 (def display-limit 3)
 
-(def polling-time-ms 2000)
+(def polling-time-ms 5000)
 
 (def dict-data
   (let [dir "wordlists/"
