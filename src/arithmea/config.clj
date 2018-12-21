@@ -4,7 +4,7 @@
 
 (def chat-ids ["-1001280104881"])
 
-(def active-latin-methods [:ia :chal :pyth :naeq :tq :eq])
+(def active-latin-methods [:ia :chal :pyth :naeq :tq :eq :aq])
 (def active-hebrew-methods [:full :ordinal :katan])
 (def active-methods (concat active-latin-methods active-hebrew-methods))
 

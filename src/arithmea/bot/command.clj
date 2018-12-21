@@ -13,7 +13,7 @@
 (defn- single-output [word method]
   (let [value (gem/calculate method word)
         matches (matcher/find-matches method value)
-        shuffled (shuffle matches)
+        shuffled (if (not-empty matches) (shuffle matches) matches)
         match-count (str "[" (count matches) "]")
         method-name (get gem/method-names method)
         self-ref (str "/" method-name "\\_" value)

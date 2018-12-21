@@ -48,6 +48,13 @@
     (testing (let [s "ABRAXAS"] s (test-calc 638 method s)))
     (testing (let [s "BABALON"] s (test-calc 461 method s)))))
 
+(deftest ccru-aq-test
+  (let [method :aq]
+    "Testcases from the CCRU writings."
+    (testing (let [s "CHRONO"] s (test-calc 127 method s)))
+    (testing (let [s "CHRONOLOGY"] s (test-calc 222 method s)))
+    (testing (let [s "CHRONOS"] s (test-calc 155 method s)))))
+
 (deftest full-test
   (testing (let [s "DERSCHLUESSEL"] s (test-calc 577 :full s))))
 

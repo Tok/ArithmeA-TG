@@ -18,7 +18,7 @@
       (latin-reduce method clean))))
 
 (def method-names {:ia      "Simple" :chal "Chal" :pyth "Pyth"
-                   :naeq    "NAEQ" :tq "TQ" :eq "EQ" :ger "German"
+                   :naeq    "NAEQ" :tq "TQ" :eq "EQ" :aq "CCRU" :ger "German"
                    :ordinal "Ordinal" :full "Full" :katan "Katan"})
 
 (defn find-method [name] (get (set/map-invert method-names) name))
