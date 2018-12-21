@@ -53,10 +53,12 @@
     "Testcases from the CCRU writings."
     (testing (let [s "CHRONO"] s (test-calc 127 method s)))
     (testing (let [s "CHRONOLOGY"] s (test-calc 222 method s)))
-    (testing (let [s "CHRONOS"] s (test-calc 155 method s)))))
+    (testing (let [s "CHRONOS"] s (test-calc 155 method s)))
+    (testing (let [s "AL"] s (test-calc 31 method s)))))
 
 (deftest full-test
-  (testing (let [s "DERSCHLUESSEL"] s (test-calc 577 :full s))))
+  (testing (let [s "DERSCHLUESSEL"] s (test-calc 577 :full s)))
+  (testing (let [s "AL"] s (test-calc 31 :full s))))
 
 (deftest ordinal-test
   (testing (let [s "DERSCHLUESSEL"] s (test-calc 82 :ordinal s))))
