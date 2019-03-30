@@ -5,12 +5,13 @@
             [clojure.string :as str]
             [clojure.tools.logging :as log]))
 
-(defn- make-groups [method data] {method (group-by #(gem/calculate method %) data)})
 (defn- clean-data [d] (->> d (map str/upper-case) (filter util/word?) distinct sort))
+(def words (clean-data config/dict-data))
+
+(defn- make-groups [method data] {method (group-by #(gem/calculate method %) data)})
 (defn- create-dict []
-  (let [data (clean-data config/dict-data)
-        dict-map (map #(make-groups % data) config/active-methods)]
-    (log/info "Loading dict with" (count data) "words.")
+  (let [dict-map (map #(make-groups % words) config/active-methods)]
+    (log/info "Loading dict with" (count words) "words.")
     (into (sorted-map) dict-map)))
 
 (def dict (create-dict))
