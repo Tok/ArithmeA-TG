@@ -32,7 +32,7 @@
 (deftest tq-test
   (let [method :tq]
     (testing (let [s "ABC"] s (test-calc 27 method s)))
-    (testing (let [s "ARITHMEA"] s (test-calc 96 method s)))
+    (testing (let [s "ARITHMEA"] s (test-calc 70 method s)))
     (testing (let [s "DER-SCHLUESSEL"] s (test-calc 153 method s)))))
 
 (deftest german-test
