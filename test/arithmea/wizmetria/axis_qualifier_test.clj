@@ -83,3 +83,7 @@
     (-> (not (symmetric? "DXA" sum)) is testing)
     (-> (not (symmetric? "ADX" sum)) is testing)
     (-> (not (symmetric? "AXD" sum)) is testing)))
+
+(comment deftest hyrule-test                                ;TODO implement
+         (-> (parallel? "Hyrule") is testing)
+         (-> (= (parallels "Hyrule") 3) is testing))

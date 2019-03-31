@@ -32,3 +32,6 @@
     (println "Checking" (count words) "words..")
     (doseq [id--sym (->> (range 0 26) (map #(find-sym % words)) (filter not-empty))]
       (println (count id--sym) "on axis" (pad (id->name (first id--sym)) 5) (second id--sym)))))
+
+(defn parallel? [word] false)                               ;TODO
+(defn parallels [word] 0)                                   ;TODO
