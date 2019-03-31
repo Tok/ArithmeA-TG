@@ -7,6 +7,7 @@
 
 (defn- clean-data [d] (->> d (map str/upper-case) (filter util/word?) distinct sort))
 (def words (clean-data config/dict-data))
+(defn longer-words [min] (filter #(>= (count %) min) words))
 
 (defn- make-groups [method data] {method (group-by #(gem/calculate method %) data)})
 (defn- create-dict []
