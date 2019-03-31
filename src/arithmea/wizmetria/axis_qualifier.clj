@@ -27,11 +27,13 @@
 (defn- pad [s n] (format (str "%" n "s") s))
 (defn- filter-sym [id words] (filter #(symmetric? % (+ id 2)) words))
 (defn- find-sym [id words] (vec [id (->> words (filter-sym id) (sort-by count) vec)]))
+(defn- filter-results [results] (filter #(not-empty (second %)) results))
 (defn -main "Wizmetria" [& _]
   (let [words (dict/longer-words 4)]
     (println "Checking" (count words) "words..")
-    (doseq [id--sym (->> (range 0 26) (map #(find-sym % words)) (filter not-empty))]
-      (println (count id--sym) "on axis" (pad (id->name (first id--sym)) 5) (second id--sym)))))
+    (doseq [id--sym (->> (range 0 26) (map #(find-sym % words)) filter-results)]
+      (let [id (first id--sym) sym (second id--sym)]
+      (println (count sym) "on axis" (pad (id->name id) 5) sym)))))
 
 (defn parallel? [word] false)                               ;TODO
 (defn parallels [word] 0)                                   ;TODO
