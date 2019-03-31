@@ -87,3 +87,10 @@
 (comment deftest hyrule-test                                ;TODO implement
          (-> (parallel? "Hyrule") is testing)
          (-> (= (parallels "Hyrule") 3) is testing))
+
+(deftest zelda-test
+  (let [sum 23]
+    (-> (symmetric? "Hero" sum) is testing)
+    (-> (symmetric? "Link" sum) is testing)
+    (-> (symmetric? "Ping" sum) is testing)
+    (-> (symmetric? "Navi" sum) is testing)))
