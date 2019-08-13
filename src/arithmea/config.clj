@@ -14,6 +14,6 @@
 (def polling-time-ms 5000)
 
 (def dict-data
-  (let [path (-> "wordlists/" io/resource io/file)
+  (let [path (-> "resources/wordlists/" io/file)
         files (filter #(.isFile %) (file-seq path))]
     (distinct (apply concat (map #(util/slurp-file %) files)))))
