@@ -21,13 +21,15 @@
   (let [method :ia]
     (testing (let [s "ABC"] s (test-calc 6 method s)))
     (testing (let [s "ARITHMEA"] s (test-calc 75 method s)))
-    (testing (let [s "DER-SCHLUESSEL"] s (test-calc 150 method s)))))
+    (testing (let [s "DER-SCHLUESSEL"] s (test-calc 150 method s)))
+    (testing (let [s "ABCDEFGHIJKLMNOPQRSTUVWXYZ"] s (test-calc 351 method s)))))
 
 (deftest naeq-test
   (let [method :naeq]
     (testing (let [s "ABC"] s (test-calc 34 method s)))
     (testing (let [s "ARITHMEA"] s (test-calc 111 method s)))
-    (testing (let [s "DER-SCHLUESSEL"] s (test-calc 146 method s)))))
+    (testing (let [s "DER-SCHLUESSEL"] s (test-calc 146 method s)))
+    (testing (let [s "ABCDEFGHIJKLMNOPQRSTUVWXYZ"] s (test-calc 351 method s)))))
 
 (deftest tq-test
   (let [method :tq]
