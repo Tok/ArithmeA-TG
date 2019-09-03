@@ -60,7 +60,7 @@
     (str "Dict contains " (md/bold word-count) " words and "
          (md/bold method-count) " active methods." \newline
          "Active in " (md/bold (count config/chat-ids))
-         " chats. Polling Delay (ms): " (md/bold config/polling-time-ms))))
+         " chats. Polling Delay (s): " (md/bold config/polling-time-s))))
 
 (defn- output-qualifiers []
   (str (emoji/exclamation-mark) " Master Number / Multiple Of 11" \newline

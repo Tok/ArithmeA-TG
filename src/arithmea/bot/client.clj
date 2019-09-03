@@ -5,13 +5,19 @@
             [clojure.data.json :as json]
             [clojure.java.io :as io]
             [clojure.tools.logging :as log]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [arithmea.config :as config]))
 
-(def secret-token (-> "secret-token.txt" io/resource slurp))
+(def ^:private secret-token (-> "secret-token.txt" io/resource slurp))
 
-(defn- bot-url "See https://core.telegram.org/bots/api#authorizing-your-bot" []
+(defn- bot-url
+  "See https://core.telegram.org/bots/api#authorizing-your-bot" []
   (let [api-url "https://api.telegram.org/bot"]
     (str api-url secret-token)))
+
+(defn- file-url [file-path]
+  "https://core.telegram.org/bots/api#getfile"
+  (str "https://api.telegram.org/file/bot" secret-token "/" file-path))
 
 (defn- do-query [request params]
   (client/get (str (bot-url) request)
@@ -23,17 +29,26 @@
 
 (defn test-bot-setup [] (do-request "/getMe"))
 
-(defn get-chat [chat-id]
-  (let [params {"chat_id" chat-id}]
-    (do-query "/getChat" params)))
+(defn- get-chat [chat-id]
+  "https://core.telegram.org/bots/api#getchat"
+  (do-query "/getChat" {"chat_id" chat-id}))
 
-(defn get-updates [offset type]
-  (let [params {"offset" offset "allowed_updates" type}]
-    (do-query "/getUpdates" params)))
+(defn- get-updates [offset type]
+  "https://core.telegram.org/bots/api#getupdates"
+  (do-query "/getUpdates"
+            {"offset"          offset
+             "timeout"         config/polling-time-s
+             "allowed_updates" type}))
 
-(defn send-channel-message [chat-id text]
+(defn- send-channel-message [chat-id text]
+  "https://core.telegram.org/bots/api#sendmessage"
+  (log/debug "==>" text)
   (let [params {"chat_id" chat-id "text" text "parse_mode" "Markdown"}]
     (if-not (str/blank? text) (do-query "/sendMessage" params))))
+
+(defn- get-file [file-id]
+  "https://core.telegram.org/bots/api#getchat"
+  (do-query "/getFile" {"file_id" file-id}))
 
 (defn- ref-command? [text]
   (and (str/starts-with? text "/") (str/includes? text "@ArithmeA_bot")))
@@ -76,9 +91,9 @@
           message (get msg "message")
           from-user (get (get message "from") "username")
           text (get message "text")]
-      (println (str "@" chat-id " " from-user ": " text))
+      (log/info (str "@" chat-id " " from-user ": " text))
       (handle-command chat-id from-user text)
-      (recur chat-id (rest messages) update-id))
+      (recur chat-id (rest messages) (+ update-id 1)))
     last-update-id))
 
 (defn- handle-chats [chat-ids messages offset]
@@ -91,5 +106,5 @@
         ok? (get body "ok")
         messages (get body "result")]
     (if (and (= status-code 200) ok?)
-      (+ (handle-chats chat-ids messages offset) 1)
+      (handle-chats chat-ids messages offset)
       (do (log/error "HTTP-Status:" status-code) offset))))
